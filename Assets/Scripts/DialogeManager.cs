@@ -6,7 +6,11 @@ using TMPro;
 public class DialogeManager : MonoBehaviour
 {
     [SerializeField] GameObject dialogueUI;
-    [SerializeField]TextMeshProUGUI textoDelDialogo;
+    [SerializeField] TextMeshProUGUI textoDelDialogo;
+    [SerializeField] TextMeshProUGUI textBoton;
+    [SerializeField] int posicionFrase = 0;
+    [SerializeField] string[] frasesDialogo;
+    [SerializeField] bool hasTalked;
 
     // Start is called before the first frame update
     void Start()
@@ -25,8 +29,16 @@ public class DialogeManager : MonoBehaviour
         //al entrar activa la UI de diálogo
         if (other.gameObject.CompareTag("NPC"))
         {
-            textoDelDialogo.text = "Hola forastero!";
-            dialogueUI.SetActive(true);
+            frasesDialogo = other.gameObject.GetComponent<NPCbehaviour>().data.dialogueFrases;
+            if(!hasTalked)
+            {
+                textoDelDialogo.text = "Hola forastero!";
+                dialogueUI.SetActive(true);
+            }
+            else
+            {
+                textoDelDialogo.text = "Esto no es facil";
+            }
         }
         
         
@@ -41,4 +53,20 @@ public class DialogeManager : MonoBehaviour
         }
         
     }
+
+    public void proxFrase()
+    {
+        if(posicionFrase < frasesDialogo.Length)
+        {
+            textoDelDialogo.text = frasesDialogo[posicionFrase];
+            posicionFrase++;
+            if(posicionFrase == frasesDialogo.Length - 1)
+            {
+                textBoton.text = "cerrar";
+            }
+        }
+        else{
+            dialogueUI.SetActive(false);
+        }
+    } 
 }
